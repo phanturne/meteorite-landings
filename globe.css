@@ -1,0 +1,20 @@
+/*https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2*/
+div.tooltip {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.right{
+    float:right;
+}
+
+.left{
+    float:left;
+}

@@ -14,6 +14,19 @@ const initialScale = projection.scale();
 const path = d3.geoPath().projection(projection);
 const center = [width/2, height/2];
 
+// Create HTML element for Tooltip
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+// Tooltip moves with mouse
+window.onmousemove = function (e) {
+    var x = e.clientX,
+        y = e.clientY;
+    div.style("top", (y + 20) + 'px').style("left", (x + 20) + 'px');
+    console.log("Tooltip Moves");
+};
+
 drawGlobe();
 drawGraticule();
 enableRotation();    
@@ -35,7 +48,7 @@ function drawGlobe() {
                 locations = locationData;
                 console.log(locations);
                 locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
-                locations = locations.filter(location => (location.year >= 2005 && location.year <= 9999));
+                locations = locations.filter(location => (location.year >= 2010 && location.year <= 9999));
                 console.log(locations);
                 drawMarkers();                   
         });
@@ -75,7 +88,33 @@ function drawMarkers() {
             gdistance = d3.geoDistance(coordinate, projection.invert(center));
             return gdistance > 1.57 ? 'none' : 'steelblue';
         })
-        .attr('r', 2);
+        .attr('r', 5)
+        // https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2
+        // Mouseover Tooltip
+        .on("mouseover", function(event,d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", 1);
+            // Tooltip Text
+            div.html("<div style=text-align:center>" + locations[d].name + "<br/>" + 
+                     "<span class='left'>GeoLocation</span><span>&nbsp</span><div class='right'>" + locations[d].GeoLocation + "</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>Class</span>&nbsp<span></span><div class='right'>" + locations[d].recclass + "</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>Year</span>&nbsp<span></span><div class='right'>" + locations[d].year + "</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>ID</span>&nbsp<span></span><div class='right'>" + locations[d].id + "</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>Mass</span>&nbsp<span></span><div class='right'>" + locations[d]["mass (g)"] + "g</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>Status</span>&nbsp<span></span><div class='right'>" + locations[d].fall + "</div>"
+                    )
+                 .style("left", (event.pageX) + "px")
+                 .style("top", (event.pageY - 28) + "px");
+            console.log("Tooltip On");
+            console.log(locations[d]);
+        })
+        .on("mouseout", function(d) {
+            div.transition()
+                 .duration(200)
+                 .style("opacity", 0);
+            console.log("Tooltip Off");
+        });
 
     markerGroup.each(function () {
         this.parentNode.appendChild(this);
