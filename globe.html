@@ -25,7 +25,10 @@
   <body>
     <div class="container">
       <h1 style="text-align:center; color:white"><bold>Meteorite Landings</bold></h1>
-      <p style="color:white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elit nec erat lacinia condimentum ac non erat. Praesent tincidunt magna id tincidunt euismod. Cras venenatis quis magna vitae rhoncus. Nunc eleifend volutpat ex in molestie. Morbi sit amet nunc in ex lacinia pretium et a nisi. Quisque bibendum vel mauris id convallis. Proin in quam sed nulla placerat consectetur. Nullam quis libero tempus, laoreet mauris vel, condimentum leo. Sed at dui non ligula placerat sagittis. Donec scelerisque arcu vitae magna condimentum porttitor.</p>
+      <p style="color:white"> The purpose of this visualization is to analyze 34,513 meteorite landings from the past 150 years
+        and identify patterns in their occurrences. Meteorites are solid pieces of debris from objects that originate in outer
+        space and have passed through the atmosphere. Our data visualization helps display concentrations of meteorite landings
+        over time. <br><br> This project is designed for: “CSE: Data Programming for Visualization, Fall 2022”</p> <br>
       <svg></svg>
       <button id = "pauseButton" onclick="Rotation()">Pause Rotation</button>
 
@@ -55,37 +58,50 @@
 
       <!-- Resources -->
       <div class="row" id="sources">
-        <div class="col-md-3 col-md-offset-1">
+        <!-- Files -->
+        <div class="col-md-2 col-md-offset-1">
           <h4 class="sources_header">Files</h4>
           <ul class="sources_list">
             <li><a href="https://github.com/phanturne/meteorite-landings">GitHub</a></li>
+            <p style="color:white">
+              globe.css <br/>
+              globe.html <br/>
+              globe.js <br/>
+              landings.json <br/>
+            </p>
           </ul>
         </div>
+
+        <!-- Data Sources -->
         <div class="col-md-3">
-          <h4 class="sources_header">Visual Sources</h4>
+          <h4 class="sources_header">Data Sources</h4>
           <ul class="sources_list">
-            <li>To be added...</li>
+            <li><a href = 'https://catalog.data.gov/dataset/meteorite-landings '> NASA Meteorite Landings </a></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+
+        <!-- Relevant Visualizations -->
+        <div class="col-md-3">
+          <h4 class="sources_header">Relevant Visualizations</h4>
+          <ul class="sources_list">
+            <li><a href = 'https://wallpaperaccess.com/full/1268171.jpg' > Space Background </a></li>
             <li></li>
             <li><a href=""></a></li>
           </ul>
         </div>
+
+        <!-- Code Sources -->
         <div class="col-md-3">
           <h4 class="sources_header">Code Sources</h4>
           <ul class="sources_list">
             <li><a href="https://bl.ocks.org/atanumallick/8d18989cd538c72ae1ead1c3b18d7b54">D3 Rotating Globe with Location Marker</a></li>
             <li><a href="https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2">Simple Tooltips in v7</a></li>
             <li><a href="https://observablehq.com/@sarah37/spinning-globe">Spinning Globe</a></li>
-            <li></li>
-            <li></li>
-          </ul>
-        </div>
-        <div class="col-md-2">
-          <h4 class="sources_header">Data Sources</h4>
-          <ul class="sources_list">
-            <li><a href = 'https://catalog.data.gov/dataset/meteorite-landings '> Dataset : NASA Meteorite Landings </a></li>
-            <li></li>
-            <li></li>
-            <li></li>
             <li></li>
             <li></li>
           </ul>
