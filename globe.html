@@ -4,16 +4,93 @@
     <!-- Meta Tag -->
     <meta charset="utf-8">
     <title>Meteorite Landings</title>
+
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="globe.css">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+
+    <!-- D3.js Source -->
     <script type= "text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
     <script type= "text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
   </head>
+
   <body>
-    <h1 style = "text-align:center; color:steelblue"><bold>Meteorite Landings</bold></h1>
-    <p style = "color:white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elit nec erat lacinia condimentum ac non erat. Praesent tincidunt magna id tincidunt euismod. Cras venenatis quis magna vitae rhoncus. Nunc eleifend volutpat ex in molestie. Morbi sit amet nunc in ex lacinia pretium et a nisi. Quisque bibendum vel mauris id convallis. Proin in quam sed nulla placerat consectetur. Nullam quis libero tempus, laoreet mauris vel, condimentum leo. Sed at dui non ligula placerat sagittis. Donec scelerisque arcu vitae magna condimentum porttitor.</p>
-    <svg></svg>
-    <button id = "pauseButton" onclick="Rotation()">Pause Rotation</button>
-    <script type="text/javascript" src="globe.js"></script>
+    <div class="container">
+      <h1 style="text-align:center; color:white"><bold>Meteorite Landings</bold></h1>
+      <p style="color:white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elit nec erat lacinia condimentum ac non erat. Praesent tincidunt magna id tincidunt euismod. Cras venenatis quis magna vitae rhoncus. Nunc eleifend volutpat ex in molestie. Morbi sit amet nunc in ex lacinia pretium et a nisi. Quisque bibendum vel mauris id convallis. Proin in quam sed nulla placerat consectetur. Nullam quis libero tempus, laoreet mauris vel, condimentum leo. Sed at dui non ligula placerat sagittis. Donec scelerisque arcu vitae magna condimentum porttitor.</p>
+      <svg></svg>
+      <button id = "pauseButton" onclick="Rotation()">Pause Rotation</button>
+
+      <!-- Visualization -->
+      <script type="text/javascript" src="globe.js"></script>
+
+      <!-- Credits -->
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+          <h4 class="credits">Created By</h4>
+          <p style="font-size: 1.1em; color:white">
+            Kevin Ding (krding@ucsc.edu) <br/>
+            Andrew Gao (agao8@ucsc.edu) <br/>
+            Anjali Khadka (akhadka1@ucsc.edu) <br/>
+            Cody Lambert (cvlamber@ucsc.edu) <br/>
+            In collaboration with Professor Suresh Lodha, TA Omkar Ghanekar, TA Jacob Low
+          </p>
+        </div>
+      </div>
+
+      <!--<div class="row">
+          <div class="col-sm-10 col-sm-offset-1">
+              <h4 class="credits">Designed For</h4>
+              <p style="font-size: 1.1em;">University of California, Santa Cruz <br> CMPS 263 Data Driven Discovery and Visualization <br> Winter 2018</p>
+          </div>
+      </div>-->
+
+      <!-- Resources -->
+      <div class="row" id="sources">
+        <div class="col-md-3 col-md-offset-1">
+          <h4 class="sources_header">Files</h4>
+          <ul class="sources_list">
+            <li><a href="https://github.com/phanturne/meteorite-landings">GitHub</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h4 class="sources_header">Visual Sources</h4>
+          <ul class="sources_list">
+            <li>To be added...</li>
+            <li></li>
+            <li><a href=""></a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h4 class="sources_header">Code Sources</h4>
+          <ul class="sources_list">
+            <li><a href="https://bl.ocks.org/atanumallick/8d18989cd538c72ae1ead1c3b18d7b54">D3 Rotating Globe with Location Marker</a></li>
+            <li><a href="https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2">Simple Tooltips in v7</a></li>
+            <li><a href="https://observablehq.com/@sarah37/spinning-globe">Spinning Globe</a></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+        <div class="col-md-2">
+          <h4 class="sources_header">Data Sources</h4>
+          <ul class="sources_list">
+            <li><a href = 'https://catalog.data.gov/dataset/meteorite-landings '> Dataset : NASA Meteorite Landings </a></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

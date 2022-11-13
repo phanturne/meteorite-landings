@@ -19,6 +19,31 @@ div.tooltip {
     float:left;
 }
 
-body {
-  background-image: url("https://wallpaperaccess.com/full/1268171.jpg")
+#sources {
+  font-family: 'Lato', sans-serif;
+  color: white;
 }
+
+.credits {
+  font-family: 'Lato', sans-serif;
+  font-weight: bold;
+  color: white;
+}
+
+.sources_list {
+  list-style-type: none;
+  padding: 0px !important;
+  font-size: 1.1em;
+  color: white;
+}
+
+.sources_header {
+  font-weight: bold;
+  color: white;
+}
+
+body {
+  background-image: url("https://wallpaperaccess.com/full/1268171.jpg");
+  color: white;
+}
+
