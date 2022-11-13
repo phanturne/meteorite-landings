@@ -47,8 +47,8 @@ function drawGlobe() {
                 .attr("d", path)
                 .style("stroke", "#888")
                 .style("stroke-width", "1px")
-                .style("fill", (d, i) => '#e5e5e5')
-                .style("opacity", ".6");
+                .style("fill", (d, i) => 'white')
+                .style("opacity", "1");
                 locations = locationData;
                 console.log(locations);
                 locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
@@ -69,6 +69,14 @@ function drawGraticule() {
         .style("fill", "#fff")
         .style("stroke", "#ccc");
 }
+
+// Background for the globe
+// Source: https://observablehq.com/@sarah37/spinning-globe
+var bgCircle = svg.append("circle")
+    .attr("cx", width/2)
+    .attr("cy", height/2)
+    .attr("r", projection.scale())
+    .style("fill", "#bfd7e4");
 
 function Rotation() {
     if (rotating) {
