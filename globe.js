@@ -13,6 +13,10 @@ const projection = d3.geoOrthographic();
 const initialScale = projection.scale();
 const path = d3.geoPath().projection(projection);
 const center = [width/2, height/2];
+var rotating = true;
+var curFrame = 0;
+var startFrame = -120;
+
 
 // Create HTML element for Tooltip
 var div = d3.select("body").append("div")
@@ -28,8 +32,8 @@ window.onmousemove = function (e) {
 };
 
 drawGlobe();
-drawGraticule();
-enableRotation();    
+drawGraticule();  
+var timer = enableRotation();
 
 function drawGlobe() {  
     d3.queue()
@@ -43,8 +47,8 @@ function drawGlobe() {
                 .attr("d", path)
                 .style("stroke", "#888")
                 .style("stroke-width", "1px")
-                .style("fill", (d, i) => 'white')
-                .style("opacity", "1");
+                .style("fill", (d, i) => '#e5e5e5')
+                .style("opacity", ".6");
                 locations = locationData;
                 console.log(locations);
                 locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
@@ -53,14 +57,6 @@ function drawGlobe() {
                 drawMarkers();                   
         });
 }
-
-// Background for the globe
-// Source: https://observablehq.com/@sarah37/spinning-globe
-var bgCircle = svg.append("circle")
-    .attr("cx", width/2)
-    .attr("cy", height/2)
-    .attr("r", projection.scale())
-    .style("fill", "#bfd7e4")
 
 function drawGraticule() {
     const graticule = d3.geoGraticule()
@@ -74,13 +70,31 @@ function drawGraticule() {
         .style("stroke", "#ccc");
 }
 
+function Rotation() {
+    if (rotating) {
+        startFrame = curFrame;
+        timer.stop();
+        document.getElementById("pauseButton").innerHTML = "Resume Rotation";
+        rotating = false;
+    }
+    else {
+        timer = enableRotation();
+        document.getElementById("pauseButton").innerHTML = "Pause Rotation";
+        rotating = true;
+        console.log("Rotating");
+    }
+    console.log(startFrame);
+    console.log(curFrame);
+}
+
 function enableRotation() {
-    d3.timer(function (elapsed) {
-        projection.rotate([config.speed * elapsed - 120, config.verticalTilt, config.horizontalTilt]);
+    return d3.timer(function (elapsed) {
+        curFrame = config.speed * elapsed + startFrame;
+        projection.rotate([curFrame, config.verticalTilt, config.horizontalTilt]);
         svg.selectAll("path").attr("d", path);
         drawMarkers();
     });
-}        
+}
 
 function drawMarkers() {
     const markers = markerGroup.selectAll('circle')
