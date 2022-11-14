@@ -7,7 +7,7 @@ const config = {
 };
 let locations = [];
 const svg = d3.select('svg')
-    .attr("viewBox", [-70, 0, width + 200, height + 200]);
+    .attr("viewBox", [0, 0, width, height]);
 const markerGroup = svg.append('g');
 const projection = d3.geoOrthographic();
 const initialScale = projection.scale();
