@@ -25,11 +25,12 @@
   <body>
     <div class="container">
       <h1 style="text-align:center; color:white"><bold>Meteorite Landings</bold></h1>
-      <p style="color:white"> The purpose of this visualization is to analyze meteorite landings from 2010 onward
+      <p style="color:white"> The purpose of this visualization is to analyze 34,513 meteorite landings from the past 150 years
         and identify patterns in their occurrences. Meteorites are solid pieces of debris from objects that originate in outer
         space and have passed through the atmosphere. Our data visualization helps display concentrations of meteorite landings
         over time. <br><br> This project is designed for: “CSE: Data Programming for Visualization, Fall 2022”</p> <br>
       <svg></svg>
+      <br>
       <button id = "pauseButton" onclick="Rotation()">Pause Rotation</button>
 
       <!-- Visualization -->
@@ -37,7 +38,7 @@
 
       <!-- Credits -->
       <div class="row">
-        <div class="col-sm-10 col-sm-offset-1">
+        <div class="col-sm-10">
           <h4 class="credits">Created By</h4>
           <p style="font-size: 1.1em; color:white">
             Kevin Ding (krding@ucsc.edu) <br/>
@@ -49,23 +50,16 @@
         </div>
       </div>
 
-      <!--<div class="row">
-          <div class="col-sm-10 col-sm-offset-1">
-              <h4 class="credits">Designed For</h4>
-              <p style="font-size: 1.1em;">University of California, Santa Cruz <br> CMPS 263 Data Driven Discovery and Visualization <br> Winter 2018</p>
-          </div>
-      </div>-->
-
       <!-- Resources -->
       <div class="row" id="sources">
         <!-- Files -->
-        <div class="col-md-2 col-md-offset-1">
+        <div class="col-md-2">
           <h4 class="sources_header">Files</h4>
           <ul class="sources_list">
             <li><a href="https://github.com/phanturne/meteorite-landings">GitHub</a></li>
             <p style="color:white">
               globe.css <br/>
-              index.html <br/>
+              globe.html <br/>
               globe.js <br/>
               landings.json <br/>
             </p>
@@ -77,11 +71,6 @@
           <h4 class="sources_header">Data Sources</h4>
           <ul class="sources_list">
             <li><a href = 'https://catalog.data.gov/dataset/meteorite-landings '> NASA Meteorite Landings </a></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
           </ul>
         </div>
 
@@ -102,8 +91,6 @@
             <li><a href="https://bl.ocks.org/atanumallick/8d18989cd538c72ae1ead1c3b18d7b54">D3 Rotating Globe with Location Marker</a></li>
             <li><a href="https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2">Simple Tooltips in v7</a></li>
             <li><a href="https://observablehq.com/@sarah37/spinning-globe">Spinning Globe</a></li>
-            <li></li>
-            <li></li>
           </ul>
         </div>
       </div>
