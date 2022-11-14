@@ -1,4 +1,8 @@
 /*https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2*/
+p {
+    font-size: 18px;
+}
+
 .row {
     margin: 40px;
 }
