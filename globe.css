@@ -1,4 +1,19 @@
 /*https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2*/
+.row {
+    margin: 40px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: lightsteelblue;
+    transition: 0.3s;
+    border: none;
+}
+
+button:hover {
+    background-color: whitesmoke;
+}
+
 div.tooltip {
   position: absolute;
   width: 200px;
@@ -46,4 +61,3 @@ body {
   background-image: url("https://wallpaperaccess.com/full/1268171.jpg");
   color: white;
 }
-
