@@ -1,7 +1,7 @@
 const width = 960;
 const height = 500;
 const config = {
-  speed: 0.005,
+  speed: 0.002,
   verticalTilt: -30,
   horizontalTilt: 0
 };
@@ -52,7 +52,17 @@ function drawGlobe() {
                 locations = locationData;
                 console.log(locations);
                 locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
-                locations = locations.filter(location => (location.year >= 2010 && location.year <= 9999));
+//                locations = locations.filter(location => (location.year >= 1800 && location.year <= 9999));
+                console.log(locations);
+                let newLocations = [];
+                for (var i = 1; i < locations.length; i++) {
+                    var prevLoc = locations[i  - 1];
+                    var curLoc  = locations[i];
+                    if (prevLoc.year != curLoc.year || Math.sqrt(Math.pow(curLoc.reclat - prevLoc.reclat, 2) + Math.pow(curLoc.reclong - prevLoc.reclong, 2)) > 3) {
+                        newLocations.push(curLoc);
+                    }
+                }
+                locations = newLocations;
                 console.log(locations);
                 drawMarkers();                   
         });
@@ -118,7 +128,7 @@ function drawMarkers() {
             gdistance = d3.geoDistance(coordinate, projection.invert(center));
             return gdistance > 1.57 ? 'none' : 'steelblue';
         })
-        .attr('r', 5)
+        .attr('r', 3)
         // https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2
         // Mouseover Tooltip
         .on("mouseover", function(event,d) {
