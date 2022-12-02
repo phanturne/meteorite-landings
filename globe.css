@@ -24,7 +24,7 @@ div.tooltip {
   height: 100px;
   padding: 2px;
   font: 12px sans-serif;
-  background: lightsteelblue;
+  background: #2B292E;
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
@@ -63,5 +63,9 @@ div.tooltip {
 
 body {
   background-image: url("https://wallpaperaccess.com/full/1268171.jpg");
+  color: white;
+}
+
+.left, .right {
   color: white;
 }

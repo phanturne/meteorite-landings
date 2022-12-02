@@ -136,16 +136,16 @@ function drawMarkers() {
                 .duration(200)
                 .style("opacity", 1);
             // Tooltip Text
-            div.html("<div style=text-align:center>" + locations[d].name + "<br/>" + 
+            div.html("<div style=text-align:center;color:white;>" + locations[d].name + "<br/>" +
                      "<span class='left'>GeoLocation</span><span>&nbsp</span><div class='right'>" + locations[d].GeoLocation + "</div>" + 
-                     "</div><div style=text-align:center>" + "<span class='left'>Class</span>&nbsp<span></span><div class='right'>" + locations[d].recclass + "</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>Class</span>&nbsp<span></span><div class='right'>" + locations[d].recclass + "</div>" +
                      "</div><div style=text-align:center>" + "<span class='left'>Year</span>&nbsp<span></span><div class='right'>" + locations[d].year + "</div>" + 
                      "</div><div style=text-align:center>" + "<span class='left'>ID</span>&nbsp<span></span><div class='right'>" + locations[d].id + "</div>" + 
                      "</div><div style=text-align:center>" + "<span class='left'>Mass</span>&nbsp<span></span><div class='right'>" + locations[d]["mass (g)"] + "g</div>" + 
                      "</div><div style=text-align:center>" + "<span class='left'>Status</span>&nbsp<span></span><div class='right'>" + locations[d].fall + "</div>"
                     )
                  .style("left", (event.pageX) + "px")
-                 .style("top", (event.pageY - 28) + "px");
+                 .style("top", (event.pageY - 28) + "px")
             console.log("Tooltip On");
             console.log(locations[d]);
         })
