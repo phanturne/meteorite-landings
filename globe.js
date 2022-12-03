@@ -160,3 +160,55 @@ function drawMarkers() {
         this.parentNode.appendChild(this);
     });
 }
+
+// width and height
+var w = 960;
+var h = 500;
+
+// scale globe to size of window
+var scl = Math.min(w, h)/2.5;
+
+// map projection
+// var projection = d3.geoOrthographic()
+//     .scale(scl)
+//     .translate([ w/2, h/2 ]);
+
+// path generator
+// var path = d3.geoPath()
+//     .projection(projection);
+
+// enable drag
+var drag = d3.drag()
+    .on("start", dragstarted)
+    .on("drag", dragged);
+
+var gpos0, o0, gpos1, o1;
+svg.call(drag);
+
+// enable zoom
+var zoom = d3.zoom()
+    .scaleExtent([0.75, 50]) //bound zoom
+    .on("zoom", zoomed);
+
+svg.call(zoom);
+
+// functions for dragging
+function dragstarted() {
+    gpos0 = projection.invert(d3.mouse(this));
+    o0 = projection.rotate();
+}
+
+function dragged() {
+    gpos1 = projection.invert(d3.mouse(this));
+    o0 = projection.rotate();
+    o1 = eulerAngles(gpos0, gpos1, o0);
+    projection.rotate(o1);
+
+    map.selectAll("path").attr("d", path);
+}
+
+// functions for zooming
+function zoomed() {
+    projection.scale(d3.event.transform.translate(projection).k * scl)
+    map.selectAll("path").attr("d", path);
+}
