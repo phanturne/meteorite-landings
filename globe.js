@@ -17,6 +17,12 @@ var rotating = true;
 var curFrame = 0;
 var startFrame = -120;
 
+// width and height
+var w = 960;
+var h = 500;
+
+// scale globe to size of window
+var scl = Math.min(w, h)/2.5;
 
 // Create HTML element for Tooltip
 var div = d3.select("body").append("div")
@@ -165,22 +171,6 @@ function drawMarkers() {
     });
 }
 
-// width and height
-var w = 960;
-var h = 500;
-
-// scale globe to size of window
-var scl = Math.min(w, h)/2.5;
-
-// map projection
-// var projection = d3.geoOrthographic()
-//     .scale(scl)
-//     .translate([ w/2, h/2 ]);
-
-// path generator
-// var path = d3.geoPath()
-//     .projection(projection);
-
 // enable drag
 var drag = d3.drag()
     .on("start", dragstarted)
@@ -214,5 +204,7 @@ function dragged() {
 // functions for zooming
 function zoomed() {
     projection.scale(d3.event.transform.translate(projection).k * scl)
-    map.selectAll("path").attr("d", path);
+
+    // Scale the background circle
+    bgCircle.attr("r", projection.scale())
 }
