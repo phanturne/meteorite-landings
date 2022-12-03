@@ -35,6 +35,10 @@ drawGlobe();
 drawGraticule();  
 var timer = enableRotation();
 
+linearColor = d3.scaleLinear()
+  .domain([0, 10000])
+  .range(["white", "red"])
+
 function drawGlobe() {  
     d3.queue()
         .defer(d3.json, 'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-110m.json')          
@@ -47,7 +51,7 @@ function drawGlobe() {
                 .attr("d", path)
                 .style("stroke", "#888")
                 .style("stroke-width", "1px")
-                .style("fill", (d, i) => 'white')
+                .style("fill", (d, i) => 'green')
                 .style("opacity", "1");
                 locations = locationData;
                 console.log(locations);
@@ -126,7 +130,7 @@ function drawMarkers() {
         .attr('fill', d => {
             const coordinate = [d.reclong, d.reclat];
             gdistance = d3.geoDistance(coordinate, projection.invert(center));
-            return gdistance > 1.57 ? 'none' : 'steelblue';
+            return gdistance > 1.57 ? 'none' : linearColor(d['mass (g)']);
         })
         .attr('r', 3)
         // https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2
