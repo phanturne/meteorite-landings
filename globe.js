@@ -138,9 +138,7 @@ function eulerAngles(v0, v1, o0) {
     return quat2euler(t);
 }
 
-
 // ************************************************************************************** //
-
 
 const width = 960;
 const height = 500;
@@ -161,10 +159,6 @@ var rotating = true;
 var curFrame = 0;
 var startFrame = -120;
 
-// width and height
-//var w = 960;
-//var h = 500;
-
 // scale globe to size of window
 var scl = Math.min(width, height)/2.5;
 
@@ -178,7 +172,7 @@ window.onmousemove = function (e) {
     var x = e.clientX,
         y = e.clientY;
     div.style("top", (y + 20) + 'px').style("left", (x + 20) + 'px');
-    console.log("Tooltip Moves");
+//    console.log("Tooltip Moves");
 };
 
 drawGlobe();
@@ -204,10 +198,8 @@ function drawGlobe() {
                 .style("fill", (d, i) => 'green')
                 .style("opacity", "1");
                 locations = locationData;
-//                console.log(locations);
                 locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
                 locations = locations.filter(location => (location.year >= 1800 && location.year <= 9999));
-//                console.log(locations);
                 let newLocations = [];
                 for (var i = 1; i < locations.length; i++) {
                     var prevLoc = locations[i  - 1];
@@ -218,7 +210,6 @@ function drawGlobe() {
                 }
                 locations = newLocations;
                 drawMarkers();
-                bgCircle.attr("r", projection.scale());
                 svg.selectAll("path").attr("d", path);
         });
 }
@@ -306,8 +297,6 @@ function drawMarkers() {
                     )
                  .style("left", (event.pageX) + "px")
                  .style("top", (event.pageY - 28) + "px")
-            console.log("Tooltip On");
-//            console.log(locations[d]);
         })
         .on("mouseout", function(d) {
             if (checker) {
@@ -316,7 +305,6 @@ function drawMarkers() {
             div.transition()
                  .duration(200)
                  .style("opacity", 0);
-            console.log("Tooltip Off");
         });
 
     markerGroup.each(function () {
@@ -352,12 +340,15 @@ function dragged() {
     if (o1 !== undefined) {
         projection.rotate(o1);
     }
-    drawGlobe();
+//    bgCircle.attr("r", projection.scale());
+    svg.selectAll("path").attr("d", path);
+    drawMarkers();
 }
 
 // functions for zooming
 function zoomed() {
     projection.scale(d3.event.transform.translate(projection).k * scl);
-    // Scale the background circle
-    drawGlobe();
+    bgCircle.attr("r", projection.scale());
+    svg.selectAll("path").attr("d", path);
+    drawMarkers();
 }
