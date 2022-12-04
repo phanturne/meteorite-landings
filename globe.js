@@ -1,3 +1,147 @@
+// all functions are from http://bl.ocks.org/ivyywang/7c94cb5a3accd9913263
+
+var to_radians = Math.PI / 180;
+var to_degrees = 180 / Math.PI;
+
+
+// Helper function: cross product of two vectors v0&v1
+function cross(v0, v1) {
+    return [v0[1] * v1[2] - v0[2] * v1[1], v0[2] * v1[0] - v0[0] * v1[2], v0[0] * v1[1] - v0[1] * v1[0]];
+}
+
+//Helper function: dot product of two vectors v0&v1
+function dot(v0, v1) {
+    for (var i = 0, sum = 0; v0.length > i; ++i) sum += v0[i] * v1[i];
+    return sum;
+}
+
+// Helper function:
+// This function converts a [lon, lat] coordinates into a [x,y,z] coordinate
+// the [x, y, z] is Cartesian, with origin at lon/lat (0,0) center of the earth
+function lonlat2xyz( coord ){
+
+    var lon = coord[0] * to_radians;
+    var lat = coord[1] * to_radians;
+
+    var x = Math.cos(lat) * Math.cos(lon);
+
+    var y = Math.cos(lat) * Math.sin(lon);
+
+    var z = Math.sin(lat);
+
+    return [x, y, z];
+}
+
+// Helper function:
+// This function computes a quaternion representation for the rotation between to vectors
+// https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Euler_angles_.E2.86.94_Quaternion
+function quaternion(v0, v1) {
+
+    if (v0 && v1) {
+
+        var w = cross(v0, v1),  // vector pendicular to v0 & v1
+            w_len = Math.sqrt(dot(w, w)); // length of w
+
+        if (w_len == 0)
+            return;
+
+        var theta = .5 * Math.acos(Math.max(-1, Math.min(1, dot(v0, v1)))),
+
+            qi  = w[2] * Math.sin(theta) / w_len;
+        qj  = - w[1] * Math.sin(theta) / w_len;
+        qk  = w[0]* Math.sin(theta) / w_len;
+        qr  = Math.cos(theta);
+
+        return theta && [qr, qi, qj, qk];
+    }
+}
+
+// Helper function:
+// This functions converts euler angles to quaternion
+// https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Euler_angles_.E2.86.94_Quaternion
+function euler2quat(e) {
+
+    if(!e) return;
+
+    var roll = .5 * e[0] * to_radians,
+        pitch = .5 * e[1] * to_radians,
+        yaw = .5 * e[2] * to_radians,
+
+        sr = Math.sin(roll),
+        cr = Math.cos(roll),
+        sp = Math.sin(pitch),
+        cp = Math.cos(pitch),
+        sy = Math.sin(yaw),
+        cy = Math.cos(yaw),
+
+        qi = sr*cp*cy - cr*sp*sy,
+        qj = cr*sp*cy + sr*cp*sy,
+        qk = cr*cp*sy - sr*sp*cy,
+        qr = cr*cp*cy + sr*sp*sy;
+
+    return [qr, qi, qj, qk];
+}
+
+// This functions computes a quaternion multiply
+// Geometrically, it means combining two quant rotations
+// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/arithmetic/index.htm
+function quatMultiply(q1, q2) {
+    if(!q1 || !q2) return;
+
+    var a = q1[0],
+        b = q1[1],
+        c = q1[2],
+        d = q1[3],
+        e = q2[0],
+        f = q2[1],
+        g = q2[2],
+        h = q2[3];
+
+    return [
+        a*e - b*f - c*g - d*h,
+        b*e + a*f + c*h - d*g,
+        a*g - b*h + c*e + d*f,
+        a*h + b*g - c*f + d*e];
+
+}
+
+// This function computes quaternion to euler angles
+// https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Euler_angles_.E2.86.94_Quaternion
+function quat2euler(t){
+
+    if(!t) return;
+
+    return [ Math.atan2(2 * (t[0] * t[1] + t[2] * t[3]), 1 - 2 * (t[1] * t[1] + t[2] * t[2])) * to_degrees,
+        Math.asin(Math.max(-1, Math.min(1, 2 * (t[0] * t[2] - t[3] * t[1])))) * to_degrees,
+        Math.atan2(2 * (t[0] * t[3] + t[1] * t[2]), 1 - 2 * (t[2] * t[2] + t[3] * t[3])) * to_degrees
+    ]
+}
+
+/*  This function computes the euler angles when given two vectors, and a rotation
+	This is really the only math function called with d3 code.
+
+	v0 - starting pos in lon/lat, commonly obtained by projection.invert
+	v1 - ending pos in lon/lat, commonly obtained by projection.invert
+	o0 - the projection rotation in euler angles at starting pos (v0), commonly obtained by projection.rotate
+*/
+
+function eulerAngles(v0, v1, o0) {
+
+    /*
+        The math behind this:
+        - first calculate the quaternion rotation between the two vectors, v0 & v1
+        - then multiply this rotation onto the original rotation at v0
+        - finally convert the resulted quat angle back to euler angles for d3 to rotate
+    */
+
+    var t = quatMultiply( euler2quat(o0), quaternion(lonlat2xyz(v0), lonlat2xyz(v1) ) );
+    return quat2euler(t);
+}
+
+
+// ************************************************************************************** //
+
+
 const width = 960;
 const height = 500;
 const config = {
@@ -18,11 +162,11 @@ var curFrame = 0;
 var startFrame = -120;
 
 // width and height
-var w = 960;
-var h = 500;
+//var w = 960;
+//var h = 500;
 
 // scale globe to size of window
-var scl = Math.min(w, h)/2.5;
+var scl = Math.min(width, height)/2.5;
 
 // Create HTML element for Tooltip
 var div = d3.select("body").append("div")
@@ -39,13 +183,13 @@ window.onmousemove = function (e) {
 
 drawGlobe();
 drawGraticule();  
-var timer = enableRotation();
+//var timer = enableRotation();
 
 linearColor = d3.scaleLinear()
   .domain([0, 10000])
   .range(["white", "red"])
 
-function drawGlobe() {  
+function drawGlobe() {
     d3.queue()
         .defer(d3.json, 'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-110m.json')          
         .defer(d3.json, 'landings.json')
@@ -60,10 +204,10 @@ function drawGlobe() {
                 .style("fill", (d, i) => 'green')
                 .style("opacity", "1");
                 locations = locationData;
-                console.log(locations);
+//                console.log(locations);
                 locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
-//                locations = locations.filter(location => (location.year >= 1800 && location.year <= 9999));
-                console.log(locations);
+                locations = locations.filter(location => (location.year >= 1800 && location.year <= 9999));
+//                console.log(locations);
                 let newLocations = [];
                 for (var i = 1; i < locations.length; i++) {
                     var prevLoc = locations[i  - 1];
@@ -73,8 +217,9 @@ function drawGlobe() {
                     }
                 }
                 locations = newLocations;
-                console.log(locations);
-                drawMarkers();                   
+                drawMarkers();
+                bgCircle.attr("r", projection.scale());
+                svg.selectAll("path").attr("d", path);
         });
 }
 
@@ -98,31 +243,33 @@ var bgCircle = svg.append("circle")
     .attr("r", projection.scale())
     .style("fill", "#bfd7e4");
 
-function Rotation() {
-    if (rotating) {
-        startFrame = curFrame;
-        timer.stop();
-        document.getElementById("pauseButton").innerHTML = "Resume Rotation";
-        rotating = false;
-    }
-    else {
-        timer = enableRotation();
-        document.getElementById("pauseButton").innerHTML = "Pause Rotation";
-        rotating = true;
-        console.log("Rotating");
-    }
-    console.log(startFrame);
-    console.log(curFrame);
-}
+//function Rotation() {
+//    if (rotating) {
+//        startFrame = curFrame;
+//        timer.stop();
+//        document.getElementById("pauseButton").innerHTML = "Resume Rotation";
+//        rotating = false;
+//    }
+//    else {
+//        timer = enableRotation();
+//        document.getElementById("pauseButton").innerHTML = "Pause Rotation";
+//        rotating = true;
+//        console.log("Rotating");
+//    }
+////    console.log(startFrame);
+////    console.log(curFrame);
+//}
+//
+//function enableRotation() {
+//    return d3.timer(function (elapsed) {
+//        curFrame = config.speed * elapsed + startFrame;
+//        projection.rotate([curFrame, config.verticalTilt, config.horizontalTilt]);
+//        svg.selectAll("path").attr("d", path);
+//        drawMarkers();
+//    });
+//}
 
-function enableRotation() {
-    return d3.timer(function (elapsed) {
-        curFrame = config.speed * elapsed + startFrame;
-        projection.rotate([curFrame, config.verticalTilt, config.horizontalTilt]);
-        svg.selectAll("path").attr("d", path);
-        drawMarkers();
-    });
-}
+var checker = false;
 
 function drawMarkers() {
     const markers = markerGroup.selectAll('circle')
@@ -142,6 +289,9 @@ function drawMarkers() {
         // https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2
         // Mouseover Tooltip
         .on("mouseover", function(event,d) {
+            if (checker) {
+                return;
+            }
             div.transition()
                 .duration(200)
                 .style("opacity", 1);
@@ -157,9 +307,12 @@ function drawMarkers() {
                  .style("left", (event.pageX) + "px")
                  .style("top", (event.pageY - 28) + "px")
             console.log("Tooltip On");
-            console.log(locations[d]);
+//            console.log(locations[d]);
         })
         .on("mouseout", function(d) {
+            if (checker) {
+                return;
+            }
             div.transition()
                  .duration(200)
                  .style("opacity", 0);
@@ -196,15 +349,15 @@ function dragged() {
     gpos1 = projection.invert(d3.mouse(this));
     o0 = projection.rotate();
     o1 = eulerAngles(gpos0, gpos1, o0);
-    projection.rotate(o1);
-
-    map.selectAll("path").attr("d", path);
+    if (o1 !== undefined) {
+        projection.rotate(o1);
+    }
+    drawGlobe();
 }
 
 // functions for zooming
 function zoomed() {
-    projection.scale(d3.event.transform.translate(projection).k * scl)
-
+    projection.scale(d3.event.transform.translate(projection).k * scl);
     // Scale the background circle
-    bgCircle.attr("r", projection.scale())
+    drawGlobe();
 }
