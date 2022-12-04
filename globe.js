@@ -232,7 +232,7 @@ var bgCircle = svg.append("circle")
     .attr("cx", width/2)
     .attr("cy", height/2)
     .attr("r", projection.scale())
-    .style("fill", "#4169E1");
+    .style("fill", "#89CFF0");
 
 //function Rotation() {
 //    if (rotating) {
