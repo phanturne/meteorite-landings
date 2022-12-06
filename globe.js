@@ -211,8 +211,8 @@ function drawGlobe() {
         
                 locations = locationData;
                 locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
-                locations = locations.filter(location => (location.year >= 1800 && location.year <= 9999));
-                locs = filterLocations(locations);
+                locs = locations.filter(location => (location.year >= 1870 && location.year <= 1930));
+                locs = filterLocations(locs);
                 drawMarkers();
                 svg.selectAll("path").attr("d", path);
         });
