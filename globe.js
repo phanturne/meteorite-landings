@@ -236,7 +236,7 @@ var bgCircle = svg.append("circle")
     .attr("cx", width/2)
     .attr("cy", height/2)
     .attr("r", projection.scale())
-    .style("fill", "#bfd7e4");
+    .style("fill", "#89CFF0");
 
 var checker = false;
 
