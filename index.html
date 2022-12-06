@@ -20,23 +20,38 @@
     <!-- D3.js Source -->
     <script type= "text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
     <script type= "text/javascript" src="https://d3js.org/topojson.v1.min.js"></script>
-    <script src="mathsfunctions.js"></script>
-      <!--Test      -->
   </head>
 
   <body>
     <div class="container">
       <h1 style="text-align:center; color:white"><bold>Meteorite Landings</bold></h1>
-      <p style="color:white"> The purpose of this visualization is to analyze 34,513 meteorite landings from the past 300 years
+      <p class="info" style="color:white"> The purpose of this visualization is to analyze 34,513 meteorite landings from the past 300 years
         and identify patterns in their occurrences. Meteorites are solid pieces of debris from objects that originate in outer
         space and have passed through the atmosphere. Our data visualization helps display concentrations of meteorite landings
         over time. <br><br> This project is designed for: “CSE: Data Programming for Visualization, Fall 2022”</p> <br>
       <svg></svg>
       <br>
-<!--      <button id = "pauseButton" onclick="Rotation()">Pause Rotation</button>-->
 
       <!-- Visualization -->
       <script type="text/javascript" src="globe.js"></script>
+        
+      <!-- Slider -->
+      <div class="range">
+        <h2 style="color: white;">Year Interval Selector</h2>
+        <div class="range-slider">
+          <span class="range-selected"></span>
+        </div>
+        <div class="range-input">
+          <input type="range" class="min" min="1801" max="2013" value="1801" step="1">
+          <input type="range" class="max" min="1801" max="2013" value="2013" step="1">
+        </div>
+        <div class="range-year">      
+          <label for="min">Min</label>
+          <input type="number" name="min" value="1801" max="2013" value="1801" readonly>      
+          <label for="max">Max</label>
+          <input type="number" name="max" value="2013" max="2013" value="2013" readonly>      
+        </div>
+      </div>  
 
       <!-- Credits -->
       <div class="row">
@@ -93,9 +108,12 @@
             <li><a href="https://bl.ocks.org/atanumallick/8d18989cd538c72ae1ead1c3b18d7b54">D3 Rotating Globe with Location Marker</a></li>
             <li><a href="https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2">Simple Tooltips in v7</a></li>
             <li><a href="https://observablehq.com/@sarah37/spinning-globe">Spinning Globe</a></li>
+            <li><a href="https://bl.ocks.org/sarah37/d8a1722f7d9f2a40eb07a3e99bf3c0be">Dragging and Zooming</a></li>
+            <li><a href="https://github.com/w3collective/price-range-slider">Double Ended Range Slider</a></li>
           </ul>
         </div>
       </div>
     </div>
+    <script src="slider.js"></script>
   </body>
 </html>
