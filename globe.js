@@ -210,10 +210,10 @@ function drawGlobe() {
                 .style("opacity", "1");
         
                 locations = locationData;
-                locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
-                locs = locations.filter(location => (location.year >= 1870 && location.year <= 1930));
+                locations = locationData.filter(location => (location.reclong != 0 && location.reclat != 0));
+                locs = locations.filter((location) => (location.year >= 1870 && location.year <= 1930));
                 locs = filterLocations(locs);
-                drawMarkers();
+                drawMarkers(locs);
                 svg.selectAll("path").attr("d", path);
         });
 }
@@ -240,10 +240,11 @@ var bgCircle = svg.append("circle")
 
 var checker = false;
 
-function drawMarkers() {
+function drawMarkers(locs) {
     markerGroup.selectAll('circle').remove();
     const markers = markerGroup.selectAll('circle')
         .data(locs);
+    console.log(locs);
     markers
         .enter()
         .append('circle')
@@ -264,12 +265,12 @@ function drawMarkers() {
                 .style("opacity", 1);
             // Tooltip Text
             div.html("<div style=text-align:center;color:white;>" + locs[d].name + "<br/>" +
-                     "<span class='left'>GeoLocation</span><span>&nbsp</span><div class='right'>" + locations[d].GeoLocation + "</div>" + 
-                     "</div><div style=text-align:center>" + "<span class='left'>Class</span>&nbsp<span></span><div class='right'>" + locations[d].recclass + "</div>" +
-                     "</div><div style=text-align:center>" + "<span class='left'>Year</span>&nbsp<span></span><div class='right'>" + locations[d].year + "</div>" + 
-                     "</div><div style=text-align:center>" + "<span class='left'>ID</span>&nbsp<span></span><div class='right'>" + locations[d].id + "</div>" + 
-                     "</div><div style=text-align:center>" + "<span class='left'>Mass</span>&nbsp<span></span><div class='right'>" + locations[d]["mass (g)"] + "g</div>" + 
-                     "</div><div style=text-align:center>" + "<span class='left'>Status</span>&nbsp<span></span><div class='right'>" + locations[d].fall + "</div>"
+                     "<span class='left'>GeoLocation</span><span>&nbsp</span><div class='right'>" + locs[d].GeoLocation + "</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>Class</span>&nbsp<span></span><div class='right'>" + locs[d].recclass + "</div>" +
+                     "</div><div style=text-align:center>" + "<span class='left'>Year</span>&nbsp<span></span><div class='right'>" + locs[d].year + "</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>ID</span>&nbsp<span></span><div class='right'>" + locs[d].id + "</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>Mass</span>&nbsp<span></span><div class='right'>" + locs[d]["mass (g)"] + "g</div>" + 
+                     "</div><div style=text-align:center>" + "<span class='left'>Status</span>&nbsp<span></span><div class='right'>" + locs[d].fall + "</div>"
                     )
                  .style("left", (event.pageX) + "px")
                  .style("top", (event.pageY - 28) + "px")
@@ -314,7 +315,7 @@ function dragged() {
         projection.rotate(o1);
     }
     svg.selectAll("path").attr("d", path);
-    drawMarkers();
+    drawMarkers(locs);
 }
 
 // functions for zooming
@@ -322,7 +323,7 @@ function zoomed() {
     projection.scale(d3.event.transform.translate(projection).k * scl);
     bgCircle.attr("r", projection.scale());
     svg.selectAll("path").attr("d", path);
-    drawMarkers();
+    drawMarkers(locs);
 }
 
 document.addEventListener( "input", locationRange );
@@ -333,7 +334,7 @@ function locationRange(event){
     let minRange = parseInt(rangeInput[0].value);
     let maxRange = parseInt(rangeInput[1].value);
     if (element.className === 'min' || element.className === 'max') {
-        locs = filterLocations(locations.filter(location => (location.year >= minRange && location.year <= maxRange)));
-        drawMarkers();
+        locs = locations.filter(location => (location.year >= minRange && location.year <= maxRange));
+        drawMarkers(locs);
     }
 }
