@@ -246,8 +246,8 @@ function drawGlobe() {
                 .attr("d", path)
                 .style("stroke", "#888")
                 .style("stroke-width", "1px")
-                .style("fill", (d, i) => '#50b350')
-                .style("opacity", "0.8");
+                .style("fill", (d, i) => 'green')
+                // .style("opacity", "0.9");
                 locations = locationData;
                 locations = locationData.filter(location => (location.reclong != 0 && location.reclat != 0));
                 locs = locations.filter((location) => (location.year >= 1870 && location.year <= 1930));
@@ -324,7 +324,7 @@ function drawMarkers(locs) {
             gdistance = d3.geoDistance(coordinate, projection.invert(center));
             return gdistance > 1.57 ? 'none' : linearColor(d['mass (g)']);
         })
-        .attr('r', 2)
+        .attr('r', 1.75)
         .on('mouseover', function(d) {
             tip.show(d);
             activeTip = d;
