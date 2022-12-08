@@ -150,12 +150,12 @@ const svgL = d3.select('#Legend')
 
 // Legend
 var x = d3.scaleSqrt()
-    .domain([0, 16000])
+    .domain([0, 14600])
     .rangeRound([440, 950]);
 
 var gL = svgL.append("g")
     .attr("class", "key")
-    .attr("transform", "translate(-410,15)");
+    .attr("transform", "translate(-440,15)");
 
 gL.selectAll("rect")
   .data(linearColor.range().map(function(d) {
