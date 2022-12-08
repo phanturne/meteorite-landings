@@ -140,6 +140,52 @@ function eulerAngles(v0, v1, o0) {
 
 // ************************************************************************************** //
 
+linearColor = d3.scaleThreshold()
+    .domain([100, 1000, 5000, 10000, 15000, 20000, 30000, 50000])
+    .range(d3.schemeOrRd[9]);
+
+//Define SVG
+const svgL = d3.select('#Legend')
+    .attr("viewBox", [0, 0, 960, 50]);
+
+// Legend
+var x = d3.scaleSqrt()
+    .domain([0, 16000])
+    .rangeRound([440, 950]);
+
+var gL = svgL.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(-410,15)");
+
+gL.selectAll("rect")
+  .data(linearColor.range().map(function(d) {
+      d = linearColor.invertExtent(d);
+      if (d[0] == null) d[0] = x.domain()[0];
+      if (d[1] == null) d[1] = x.domain()[1];
+      return d;
+    }))
+  .enter().append("rect")
+    .attr("height", 8)
+    .attr("x", function(d) { return x(d[0]); })
+    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+    .attr("fill", function(d) { return linearColor(d[0]); });
+
+gL.append("text")
+    .attr("class", "caption")
+    .attr("x", x.range()[0])
+    .attr("y", -6)
+    .attr("fill", "white")
+    .attr("text-anchor", "start")
+    .attr("font-weight", "bold")
+    .text("Meteorite Mass (g)");
+
+gL.call(d3.axisBottom(x)
+    .tickSize(13)
+    .tickValues(linearColor.domain()))
+    .attr("class", "axisWhite")
+    .select(".domain")
+    .remove();
+
 const width = 960;
 const height = 500;
 const config = {
@@ -148,14 +194,15 @@ const config = {
   horizontalTilt: 0
 };
 let locations = [];
-const svg = d3.select('svg')
+let locs = [];
+const svg = d3.select('#Globe')
     .attr("viewBox", [0, 0, width, height]);
 const markerGroup = svg.append('g');
 const projection = d3.geoOrthographic();
 const initialScale = projection.scale();
 const path = d3.geoPath().projection(projection);
 const center = [width/2, height/2];
-var rotating = true;
+//var rotating = true;
 var curFrame = 0;
 var startFrame = -120;
 
@@ -172,20 +219,30 @@ window.onmousemove = function (e) {
     var x = e.clientX,
         y = e.clientY;
     div.style("top", (y + 20) + 'px').style("left", (x + 20) + 'px');
-//    console.log("Tooltip Moves");
 };
 
 drawGlobe();
-drawGraticule();
-//var timer = enableRotation();
+drawGraticule();  
 
-linearColor = d3.scaleLinear()
-  .domain([0, 10000])
-  .range(["white", "red"])
+//linearColor = d3.scaleLinear()
+//  .domain([0, 10000])
+//  .range(["white", "red"])
+
+function filterLocations(locations) {
+    let newLocations = [];
+    for (var i = 1; i < locations.length; i++) {
+        var prevLoc = locations[i  - 1];
+        var curLoc  = locations[i];
+        if (prevLoc.year != curLoc.year || Math.sqrt(Math.pow(curLoc.reclat - prevLoc.reclat, 2) + Math.pow(curLoc.reclong - prevLoc.reclong, 2)) > 3) {
+            newLocations.push(curLoc);
+        }
+    }
+    return newLocations;
+}
 
 function drawGlobe() {
     d3.queue()
-        .defer(d3.json, 'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-110m.json')
+        .defer(d3.json, 'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-110m.json')          
         .defer(d3.json, 'landings.json')
         .await((error, worldData, locationData) => {
             svg.selectAll(".segment")
@@ -198,18 +255,10 @@ function drawGlobe() {
                 .style("fill", (d, i) => 'green')
                 .style("opacity", "1");
                 locations = locationData;
-                locations = locations.filter(location => (location.reclong != 0 && location.reclat != 0));
-                locations = locations.filter(location => (location.year >= 1800 && location.year <= 9999));
-                let newLocations = [];
-                for (var i = 1; i < locations.length; i++) {
-                    var prevLoc = locations[i  - 1];
-                    var curLoc  = locations[i];
-                    if (prevLoc.year != curLoc.year || Math.sqrt(Math.pow(curLoc.reclat - prevLoc.reclat, 2) + Math.pow(curLoc.reclong - prevLoc.reclong, 2)) > 3) {
-                        newLocations.push(curLoc);
-                    }
-                }
-                locations = newLocations;
-                drawMarkers();
+                locations = locationData.filter(location => (location.reclong != 0 && location.reclat != 0));
+                locs = locations.filter((location) => (location.year >= 1870 && location.year <= 1930));
+                locs = filterLocations(locs);
+                drawMarkers(locs);
                 svg.selectAll("path").attr("d", path);
         });
 }
@@ -226,7 +275,6 @@ function drawGraticule() {
         .style("stroke", "#ccc");
 }
 
-
 // Background for the globe
 // Source: https://observablehq.com/@sarah37/spinning-globe
 var bgCircle = svg.append("circle")
@@ -235,53 +283,42 @@ var bgCircle = svg.append("circle")
     .attr("r", projection.scale())
     .style("fill", "#89CFF0");
 
-
-//Legend for mass color
-var legend1 = g.selectAll("rect1")
-      .data(colors1.range().map(function(d) {
-          d = colors1.invertExtent(d);
-          if (d[0] == null) d[0] = x.domain()[0];
-          if (d[1] == null) d[1] = x.domain()[1];
-          return d;
-        }))
-      .enter().append("rect")
-        .attr("height", 8)
-        .attr("x", function(d) { return x(d[0]); })
-        .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-        .attr("fill", function(d) { return colors1(d[0]); });
-
-
-//function Rotation() {
-//    if (rotating) {
-//        startFrame = curFrame;
-//        timer.stop();
-//        document.getElementById("pauseButton").innerHTML = "Resume Rotation";
-//        rotating = false;
-//    }
-//    else {
-//        timer = enableRotation();
-//        document.getElementById("pauseButton").innerHTML = "Pause Rotation";
-//        rotating = true;
-//        console.log("Rotating");
-//    }
-////    console.log(startFrame);
-////    console.log(curFrame);
-//}
-//
-//function enableRotation() {
-//    return d3.timer(function (elapsed) {
-//        curFrame = config.speed * elapsed + startFrame;
-//        projection.rotate([curFrame, config.verticalTilt, config.horizontalTilt]);
-//        svg.selectAll("path").attr("d", path);
-//        drawMarkers();
-//    });
-//}
-
 var checker = false;
 
-function drawMarkers() {
+// Tooltip
+// Source: https://bl.ocks.org/micahstubbs/c7f17dcbdc728e0d579d84e47c33dfa6
+const tip = d3
+  .tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(
+    d =>
+      "<div style=text-align:center;color:white;>" + d.name + "<br/>" +
+     "<span class='left'>GeoLocation</span><span>&nbsp</span><div class='right'>" + d.GeoLocation + "</div>" + 
+     "</div><div style=text-align:center>" + "<span class='left'>Class</span>&nbsp<span></span><div class='right'>" + d.recclass + "</div>" +
+     "</div><div style=text-align:center>" + "<span class='left'>Year</span>&nbsp<span></span><div class='right'>" + d.year + "</div>" + 
+     "</div><div style=text-align:center>" + "<span class='left'>ID</span>&nbsp<span></span><div class='right'>" + d.id + "</div>" + 
+     "</div><div style=text-align:center>" + "<span class='left'>Mass</span>&nbsp<span></span><div class='right'>" + d["mass (g)"] + "g</div>" + 
+     "</div><div style=text-align:center>" + "<span class='left'>Status</span>&nbsp<span></span><div class='right'>" + d.fall + "</div>"
+  );
+
+tip.direction(function(d) {
+  return 'n';
+});
+
+tip.offset(function(d) {
+  return [-10, 0];
+});
+
+svg.call(tip);
+
+var activeTip;
+
+function drawMarkers(locs) {
+    markerGroup.selectAll('circle').remove();
     const markers = markerGroup.selectAll('circle')
-        .data(locations);
+        .data(locs);
+    //console.log(locs);
     markers
         .enter()
         .append('circle')
@@ -293,35 +330,13 @@ function drawMarkers() {
             gdistance = d3.geoDistance(coordinate, projection.invert(center));
             return gdistance > 1.57 ? 'none' : linearColor(d['mass (g)']);
         })
-        .attr('r', 3)
-        // https://bl.ocks.org/d3noob/97e51c5be17291f79a27705cef827da2
-        // Mouseover Tooltip
-        .on("mouseover", function(event,d) {
-            if (checker) {
-                return;
-            }
-            div.transition()
-                .duration(200)
-                .style("opacity", 1);
-            // Tooltip Text
-            div.html("<div style=text-align:center;color:white;>" + locations[d].name + "<br/>" +
-                     "<span class='left'>GeoLocation</span><span>&nbsp</span><div class='right'>" + locations[d].GeoLocation + "</div>" +
-                     "</div><div style=text-align:center>" + "<span class='left'>Class</span>&nbsp<span></span><div class='right'>" + locations[d].recclass + "</div>" +
-                     "</div><div style=text-align:center>" + "<span class='left'>Year</span>&nbsp<span></span><div class='right'>" + locations[d].year + "</div>" +
-                     "</div><div style=text-align:center>" + "<span class='left'>ID</span>&nbsp<span></span><div class='right'>" + locations[d].id + "</div>" +
-                     "</div><div style=text-align:center>" + "<span class='left'>Mass</span>&nbsp<span></span><div class='right'>" + locations[d]["mass (g)"] + "g</div>" +
-                     "</div><div style=text-align:center>" + "<span class='left'>Status</span>&nbsp<span></span><div class='right'>" + locations[d].fall + "</div>"
-                    )
-                 .style("left", (event.pageX) + "px")
-                 .style("top", (event.pageY - 28) + "px")
+        .attr('r', 1.5)
+        .on('mouseover', function(d) {
+            tip.show(d);
+            activeTip = d;
         })
-        .on("mouseout", function(d) {
-            if (checker) {
-                return;
-            }
-            div.transition()
-                 .duration(200)
-                 .style("opacity", 0);
+        .on('mouseout', function(d) {
+            tip.hide(d);
         });
 
     markerGroup.each(function () {
@@ -357,9 +372,8 @@ function dragged() {
     if (o1 !== undefined) {
         projection.rotate(o1);
     }
-//    bgCircle.attr("r", projection.scale());
     svg.selectAll("path").attr("d", path);
-    drawMarkers();
+    drawMarkers(locs);
 }
 
 // functions for zooming
@@ -367,5 +381,19 @@ function zoomed() {
     projection.scale(d3.event.transform.translate(projection).k * scl);
     bgCircle.attr("r", projection.scale());
     svg.selectAll("path").attr("d", path);
-    drawMarkers();
+    drawMarkers(locs);
+    tip.hide(activeTip);
+}
+
+document.addEventListener( "input", locationRange );
+
+function locationRange(event){
+    var element = event.target;
+    const rangeInput = document.querySelectorAll(".range-input input");
+    let minRange = parseInt(rangeInput[0].value);
+    let maxRange = parseInt(rangeInput[1].value);
+    if (element.className === 'min' || element.className === 'max') {
+        locs = locations.filter(location => (location.year >= minRange && location.year <= maxRange));
+        drawMarkers(locs);
+    }
 }

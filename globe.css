@@ -7,16 +7,8 @@ button:hover {
     background-color: whitesmoke;
 }
 
-div.tooltip {
-    position: absolute;
-    width: 200px;
-    height: 100px;
-    padding: 2px;
-    font: 12px sans-serif;
-    background: #2B292E;
-    border: 0px;
-    border-radius: 8px;
-    pointer-events: none;
+.axisWhite text {
+    fill: white;
 }
 
 .right{
@@ -128,3 +120,59 @@ body {
 .range-year input:first-of-type {
     margin-right: 15px;
 }
+
+
+
+
+
+
+
+
+
+
+
+/*https://bl.ocks.org/micahstubbs/c7f17dcbdc728e0d579d84e47c33dfa6*/
+  .names {
+    fill: none;
+    stroke: #fff;
+    stroke-linejoin: round;
+  }
+  
+  /* Tooltip CSS */
+  .d3-tip {
+    line-height: 1.5;
+    font-weight: 400;
+    font-family:"avenir next", Arial, sans-serif;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #FFA500;
+    border-radius: 1px;
+    pointer-events: none;
+  }
+
+  /* Creates a small triangle extender for the tooltip */
+  .d3-tip:after {      
+    box-sizing: border-box;
+    display: inline;
+    font-size: 8px;
+    width: 100%;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    pointer-events: none;
+    
+  }
+
+  /* Northward tooltips */
+  .d3-tip.n:after {
+    content: "\25BC";
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+    text-align: center;
+  }
+
+
+  .details{
+    color: white;
+  }
