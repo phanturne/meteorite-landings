@@ -1,8 +1,6 @@
 // all functions are from http://bl.ocks.org/ivyywang/7c94cb5a3accd9913263
-
 var to_radians = Math.PI / 180;
 var to_degrees = 180 / Math.PI;
-
 
 // Helper function: cross product of two vectors v0&v1
 function cross(v0, v1) {
@@ -19,7 +17,6 @@ function dot(v0, v1) {
 // This function converts a [lon, lat] coordinates into a [x,y,z] coordinate
 // the [x, y, z] is Cartesian, with origin at lon/lat (0,0) center of the earth
 function lonlat2xyz( coord ){
-
     var lon = coord[0] * to_radians;
     var lat = coord[1] * to_radians;
 
@@ -193,6 +190,7 @@ const config = {
   verticalTilt: -30,
   horizontalTilt: 0
 };
+
 let locations = [];
 let locs = [];
 const svg = d3.select('#Globe')
@@ -222,11 +220,7 @@ window.onmousemove = function (e) {
 };
 
 drawGlobe();
-drawGraticule();  
-
-//linearColor = d3.scaleLinear()
-//  .domain([0, 10000])
-//  .range(["white", "red"])
+drawGraticule();
 
 function filterLocations(locations) {
     let newLocations = [];
@@ -252,8 +246,8 @@ function drawGlobe() {
                 .attr("d", path)
                 .style("stroke", "#888")
                 .style("stroke-width", "1px")
-                .style("fill", (d, i) => 'green')
-                .style("opacity", "1");
+                .style("fill", (d, i) => '#50b350')
+                .style("opacity", "0.8");
                 locations = locationData;
                 locations = locationData.filter(location => (location.reclong != 0 && location.reclat != 0));
                 locs = locations.filter((location) => (location.year >= 1870 && location.year <= 1930));
@@ -281,7 +275,7 @@ var bgCircle = svg.append("circle")
     .attr("cx", width/2)
     .attr("cy", height/2)
     .attr("r", projection.scale())
-    .style("fill", "#89CFF0");
+    .style("fill", "#60cdf7");
 
 var checker = false;
 
@@ -330,7 +324,7 @@ function drawMarkers(locs) {
             gdistance = d3.geoDistance(coordinate, projection.invert(center));
             return gdistance > 1.57 ? 'none' : linearColor(d['mass (g)']);
         })
-        .attr('r', 1.5)
+        .attr('r', 2)
         .on('mouseover', function(d) {
             tip.show(d);
             activeTip = d;
