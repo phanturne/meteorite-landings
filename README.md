@@ -1,5 +1,7 @@
 # Meterorite Landings: A Global Visualization
 
+![Meteorite Background](https://pbs.twimg.com/media/FSaCrT4WYAA9uyI?format=jpg&name=4096x4096)
+
 ## Purpose 
 The purpose of this visualization is to analyze 34,513 meteorite landings from the past 220 years and identify patterns in their occurrences. Meteorites are solid pieces of debris from objects that originate in outer space and have passed through the atmosphere. The data visualization display concentrations of meteorite landings over time.
 
